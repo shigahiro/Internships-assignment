@@ -3,36 +3,26 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
-	"github.com/shigahiro/gin-app/model"
+	"github.com/shigahiro/gin-app/db"
 )
 
 func main() {
 	router := gin.Default()
-	dbInit()
+	router.LoadHTMLGlob("views/*.html")
+
+	db.Init()
+	// 登録
+	router.POST("/new")
+	// 登録内容詳細
+	router.GET("/detail:id")
+	// 一覧
 	router.GET("/")
+	// 更新
+	router.POST("/update/:id")
+	// 削除
+	router.POST("/delete/:id")
+	// 削除内容
+	router.GET("/delete_check/:id")
+
 	router.Run()
-}
-
-func dbInit() {
-	db := gormConnect()
-
-	// コネクション解放解放
-	defer db.Close()
-	db.AutoMigrate(&model.Tweet{}) //構造体に基づいてテーブルを作成
-}
-
-func gormConnect() *gorm.DB {
-	// MySQLだと文字コードの問題で"?parseTime=true"を末尾につける必要がある
-	DBMS := "mysql"
-	USER := "test"
-	PASS := "12345678"
-	DBNAME := "test"
-	CONNECT := USER + ":" + PASS + "@/" + DBNAME + "?parseTime=true"
-	db, err := gorm.Open(DBMS, CONNECT)
-
-	if err != nil {
-		panic(err.Error())
-	}
-	return db
 }
