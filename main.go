@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"github.com/shigahiro/gin-app"
+	"github.com/shigahiro/gin-app/model"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func dbInit() {
 
 	// コネクション解放解放
 	defer db.Close()
-	db.AutoMigrate(&Tweet{}) //構造体に基づいてテーブルを作成
+	db.AutoMigrate(&model.Tweet{}) //構造体に基づいてテーブルを作成
 }
 
 func gormConnect() *gorm.DB {
