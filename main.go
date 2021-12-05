@@ -8,6 +8,7 @@ import (
 
 func main() {
 	router := gin.Default()
+	// HTMLファイルを読み込んだ結果をHTMLを描画するレンダリングエンジンというものに関連付ける
 	router.LoadHTMLGlob("views/*.html")
 
 	db.Init()

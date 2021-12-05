@@ -2,6 +2,8 @@ package model
 
 import "github.com/jinzhu/gorm"
 
+// gorm.ModelにはIDとtime.Time型のCreatedAt,UpdatedAt,DeletedAt(ポインタ)が入っている。
+
 type Tweet struct {
 	gorm.Model
 	Content string `form:"content" binding:"required"`
