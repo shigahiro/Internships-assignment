@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/shigahiro/gin-app/db"
+	"github.com/shigahiro/gin-app/handler"
 )
 
 func main() {
@@ -13,9 +14,9 @@ func main() {
 
 	db.Init()
 	// 登録
-	router.POST("/new")
+	router.POST("/new", handler.Register)
 	// 登録内容詳細
-	router.GET("/detail:id")
+	router.GET("/detail/:id")
 	// 一覧
 	router.GET("/")
 	// 更新
