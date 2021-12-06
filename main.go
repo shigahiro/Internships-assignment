@@ -39,33 +39,21 @@ func main() {
 
 	//投稿詳細
 	router.GET("/detail/:id", func(c *gin.Context) {
-		n := c.Param("id") // URLのパラメータの値を返す→今回はidに入ったもの
-		id, err := strconv.Atoi(n)
-		if err != nil {
-			panic(err)
-		}
+		id := getParamId(c)
 		tweet := db.GetOne(id)
 		c.HTML(200, "detail.html", gin.H{"tweet": tweet})
 	})
 
 	//削除確認
 	router.GET("/delete_check/:id", func(c *gin.Context) {
-		n := c.Param("id")
-		id, err := strconv.Atoi(n)
-		if err != nil {
-			panic("ERROR")
-		}
+		id := getParamId(c)
 		tweet := db.GetOne(id)
 		c.HTML(200, "delete.html", gin.H{"tweet": tweet})
 	})
 
 	//更新
 	router.POST("/update/:id", func(c *gin.Context) {
-		n := c.Param("id")
-		id, err := strconv.Atoi(n)
-		if err != nil {
-			panic("ERROR")
-		}
+		id := getParamId(c)
 		tweet := c.PostForm("tweet")
 		db.Update(id, tweet)
 		c.Redirect(302, "/")
@@ -73,15 +61,20 @@ func main() {
 
 	//削除
 	router.POST("/delete/:id", func(c *gin.Context) {
-		n := c.Param("id")
-		id, err := strconv.Atoi(n)
-		if err != nil {
-			panic("ERROR")
-		}
+		id := getParamId(c)
 		db.Delete(id)
 		c.Redirect(302, "/")
 
 	})
 
 	router.Run()
+}
+
+func getParamId(c *gin.Context) int {
+	n := c.Param("id")
+	id, err := strconv.Atoi(n)
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
