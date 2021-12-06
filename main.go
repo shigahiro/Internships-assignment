@@ -1,13 +1,10 @@
 package main
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/shigahiro/gin-app/db"
-	"github.com/shigahiro/gin-app/model"
+	"github.com/shigahiro/gin-app/handler"
 )
 
 func main() {
@@ -16,65 +13,24 @@ func main() {
 	router.LoadHTMLGlob("views/*.html")
 
 	db.Init()
-	router.GET("/", func(c *gin.Context) {
-		tweets := db.GetAll()
-		c.HTML(200, "index.html", gin.H{"tweets": tweets})
-	})
+
+	// 投稿一覧
+	router.GET("/", handler.GetPosts)
 
 	//登録
-	router.POST("/new", func(c *gin.Context) {
-		var form model.Tweet
-		// 構造体のタグでバリデーションができる
-		if err := c.Bind(&form); err != nil {
-			tweets := db.GetAll()
-			c.HTML(http.StatusBadRequest, "index.html", gin.H{"tweets": tweets, "err": err})
-			// 他のハンドラーの呼び出しを防ぐ
-			c.Abort()
-		} else {
-			content := c.PostForm("content")
-			db.Insert(content)
-			c.Redirect(302, "/")
-		}
-	})
+	router.POST("/new", handler.RegisterPost)
 
 	//投稿詳細
-	router.GET("/detail/:id", func(c *gin.Context) {
-		id := getParamId(c)
-		tweet := db.GetOne(id)
-		c.HTML(200, "detail.html", gin.H{"tweet": tweet})
-	})
+	router.GET("/detail/:id", handler.GetDetailPost)
 
 	//削除確認
-	router.GET("/delete_check/:id", func(c *gin.Context) {
-		id := getParamId(c)
-		tweet := db.GetOne(id)
-		c.HTML(200, "delete.html", gin.H{"tweet": tweet})
-	})
+	router.GET("/delete_check/:id", handler.CheckDeletion)
 
 	//更新
-	router.POST("/update/:id", func(c *gin.Context) {
-		id := getParamId(c)
-		tweet := c.PostForm("tweet")
-		db.Update(id, tweet)
-		c.Redirect(302, "/")
-	})
+	router.POST("/update/:id", handler.UpdatePost)
 
 	//削除
-	router.POST("/delete/:id", func(c *gin.Context) {
-		id := getParamId(c)
-		db.Delete(id)
-		c.Redirect(302, "/")
-
-	})
+	router.POST("/delete/:id", handler.RemovePost)
 
 	router.Run()
-}
-
-func getParamId(c *gin.Context) int {
-	n := c.Param("id")
-	id, err := strconv.Atoi(n)
-	if err != nil {
-		panic(err)
-	}
-	return id
 }
