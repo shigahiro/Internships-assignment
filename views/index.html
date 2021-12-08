@@ -20,9 +20,11 @@
       </div>
       <div class="indexGet">
         <ul>
+          <!-- rangeとendで繰り返し処理 -->
           {{range.tweets}}
           <li>
-            {{.Content}}
+            <!-- .ContentでtweetsのContentを表示 -->
+            {{.Content}} 
             <label><a href="/detail/{{.ID}}">編集</a></label>
             <label><a href="/delete_check/{{.ID}}">削除</a></label>
           </li>

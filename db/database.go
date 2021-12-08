@@ -52,7 +52,7 @@ func GetAll() []model.Tweet {
 
 	defer db.Close()
 	var tweets []model.Tweet
-	// FindでDB名を指定して取得できる。そこからorderで登録順に並び替え
+	// tweetsに登録順に並び替えたものを入れる
 	db.Order("created_at desc").Find(&tweets)
 	return tweets
 }

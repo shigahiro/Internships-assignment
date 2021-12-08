@@ -20,6 +20,7 @@ func getParamId(c *gin.Context) int {
 
 func GetPosts(c *gin.Context) {
 	tweets := db.GetAll()
+	// index.htmlを描画する。"tweets"をキーとしてバリューがtweetsのマップを作る
 	c.HTML(200, "index.html", gin.H{"tweets": tweets})
 }
 
