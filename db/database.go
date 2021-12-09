@@ -1,7 +1,10 @@
 package db
 
 import (
+	"os"
+
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 	model "github.com/shigahiro/gin-app/model"
 )
 
@@ -13,10 +16,14 @@ func Init() {
 }
 
 func gormConnect() *gorm.DB {
-	DBMS := "mysql"
-	USER := "test"
-	PASS := "12345678"
-	DBNAME := "test"
+	err := godotenv.Load()
+	if err != nil {
+		panic(err.Error())
+	}
+	DBMS := os.Getenv("mytweet_DBMS")
+	USER := os.Getenv("mytweet_USER")
+	PASS := os.Getenv("mytweet_PASS")
+	DBNAME := os.Getenv("mytweet_DBNAME")
 
 	// time.Timeの処理のために?parseTime=trueを追加
 	// ホスト名を指定する際はdbnameの前に()内で指定
