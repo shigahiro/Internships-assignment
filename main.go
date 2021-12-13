@@ -32,7 +32,9 @@ func main() {
 	//削除
 	router.POST("/delete/:id", handler.RemovePost)
 
-	router.GET("/signup", handler.SignUp)
+	router.GET("/signup", func(c *gin.Context) {
+		c.HTML(200, "signup.html", gin.H{})
+	})
 	router.POST("/signup", handler.SignUp)
 
 	router.Run()

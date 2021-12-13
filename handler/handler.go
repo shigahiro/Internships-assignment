@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -65,11 +64,21 @@ func RemovePost(c *gin.Context) {
 	c.Redirect(302, "/")
 }
 
+// 以下ユーザ登録・ログイン
+
 func SignUp(c *gin.Context) {
 
-	c.HTML(200, "signup.html", gin.H{})
-	var user model.User
-	user.Username = c.PostForm("username")
-	user.Password = c.PostForm("password")
-	fmt.Println(user)
+	var form model.User
+
+	if err := c.Bind(&form); err != nil {
+		c.HTML(http.StatusBadRequest, "signup.html", gin.H{"err": err})
+		c.Abort()
+	} else {
+		username := c.PostForm("username")
+		password := c.PostForm("password")
+		if err := db.CreateUser(username, password); err != nil {
+			c.HTML(http.StatusBadRequest, "signup.html", gin.H{"err": err})
+		}
+		c.Redirect(302, "/")
+	}
 }

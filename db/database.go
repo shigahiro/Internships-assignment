@@ -5,7 +5,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
-	model "github.com/shigahiro/gin-app/model"
+	"github.com/shigahiro/gin-app/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Init() {
@@ -13,6 +14,7 @@ func Init() {
 
 	defer db.Close()
 	db.AutoMigrate(&model.Tweet{}) //構造体に基づいてテーブルを作成
+	db.AutoMigrate(&model.User{})
 }
 
 func gormConnect() *gorm.DB {
@@ -78,4 +80,16 @@ func Delete(id int) {
 	db.First(&tweet, id)
 	db.Delete(&tweet)
 	db.Close()
+}
+
+// 以下ユーザの処理
+func CreateUser(username string, password string) []error {
+	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
+	db := gormConnect()
+	defer db.Close()
+	// Insert処理
+	if err := db.Create(&model.User{Username: username, Password: string(hashed)}).GetErrors(); err != nil {
+		return err
+	}
+	return nil
 }
