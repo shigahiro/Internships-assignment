@@ -37,5 +37,9 @@ func main() {
 	})
 	router.POST("/signup", handler.SignUp)
 
+	router.GET("/login", func(c *gin.Context) {
+		c.HTML(200, "login.html", gin.H{})
+	})
+
 	router.Run()
 }
