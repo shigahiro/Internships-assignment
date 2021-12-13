@@ -63,3 +63,8 @@ func RemovePost(c *gin.Context) {
 	db.Delete(id)
 	c.Redirect(302, "/")
 }
+
+func SignUp(c *gin.Context) {
+
+	c.HTML(200, "signup.html", gin.H{})
+}

@@ -32,5 +32,7 @@ func main() {
 	//削除
 	router.POST("/delete/:id", handler.RemovePost)
 
+	router.GET("/signup", handler.SignUp)
+
 	router.Run()
 }
