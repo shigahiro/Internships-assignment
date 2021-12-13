@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -67,4 +68,8 @@ func RemovePost(c *gin.Context) {
 func SignUp(c *gin.Context) {
 
 	c.HTML(200, "signup.html", gin.H{})
+	var user model.User
+	user.Username = c.PostForm("username")
+	user.Password = c.PostForm("password")
+	fmt.Println(user)
 }

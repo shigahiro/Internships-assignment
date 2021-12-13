@@ -33,6 +33,7 @@ func main() {
 	router.POST("/delete/:id", handler.RemovePost)
 
 	router.GET("/signup", handler.SignUp)
+	router.POST("/signup", handler.SignUp)
 
 	router.Run()
 }
