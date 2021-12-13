@@ -93,3 +93,11 @@ func CreateUser(username string, password string) []error {
 	}
 	return nil
 }
+
+func GetUser(username string) model.User {
+	var user model.User
+
+	db := gormConnect()
+	db.Where("username = ?", username).First(&user)
+	return user
+}

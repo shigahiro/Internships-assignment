@@ -1,12 +1,14 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shigahiro/gin-app/db"
 	"github.com/shigahiro/gin-app/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func getParamId(c *gin.Context) int {
@@ -79,6 +81,20 @@ func SignUp(c *gin.Context) {
 		if err := db.CreateUser(username, password); err != nil {
 			c.HTML(http.StatusBadRequest, "signup.html", gin.H{"err": err})
 		}
+		c.Redirect(302, "/")
+	}
+}
+
+func Login(c *gin.Context) {
+	dbPassword := db.GetUser(c.PostForm("username")).Password
+	formPassword := c.PostForm("password")
+
+	if err := bcrypt.CompareHashAndPassword([]byte(dbPassword), []byte(formPassword)); err != nil {
+		log.Println("ログインできませんでした")
+		c.HTML(http.StatusBadRequest, "login.html", gin.H{"err": err})
+		c.Abort()
+	} else {
+		log.Println("ログインできました")
 		c.Redirect(302, "/")
 	}
 }

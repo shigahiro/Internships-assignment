@@ -40,6 +40,7 @@ func main() {
 	router.GET("/login", func(c *gin.Context) {
 		c.HTML(200, "login.html", gin.H{})
 	})
+	router.POST("/login", handler.Login)
 
 	router.Run()
 }
