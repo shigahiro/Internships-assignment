@@ -83,12 +83,12 @@ func Delete(id int) {
 }
 
 // 以下ユーザの処理
-func CreateUser(username string, password string) []error {
+func CreateUser(username string, password string) error {
 	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), 10)
 	db := gormConnect()
 	defer db.Close()
 	// Insert処理
-	if err := db.Create(&model.User{Username: username, Password: string(hashed)}).GetErrors(); err != nil {
+	if err := db.Create(&model.User{Username: username, Password: string(hashed)}).Error; err != nil {
 		return err
 	}
 	return nil
