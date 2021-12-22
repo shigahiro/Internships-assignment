@@ -1,1 +1,1 @@
-# gin app
+# gin-app
